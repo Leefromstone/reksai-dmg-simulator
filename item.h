@@ -11,7 +11,7 @@ struct ChampionStats {
     float bonusad;
     float attackSpeed;
     float hp;
-    float leathality;
+    float lethality = 0;
 };
 
 void applyItem(Item item, ChampionStats &champ);

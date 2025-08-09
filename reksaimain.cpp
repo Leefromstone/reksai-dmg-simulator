@@ -19,6 +19,11 @@ float adgrowth = 3;
 float asgrowth = 0.02;
 float hpgrowth = 99;
 
+//dummy zeug
+int dummyhp;
+int dummyres;
+
+
 enum Rune {
     CONQUEROR = 1,
     PTA = 2,
@@ -64,7 +69,7 @@ if(cin.fail()){
 }
 //stats für reksai per level
 ChampionStats reksai;
-reksai.ad = basead + adgrowth*(level-1);
+reksai.ad = basead + adgrowth*(level-1) + reksai.bonusad;
 reksai.attackSpeed = baseas + ((asgrowth*baseas)*(level-1));
 reksai.bonusad = 0;
 reksai.hp = basehp + hpgrowth*(level-1);
@@ -94,18 +99,42 @@ switch(itemauswahl){
 case 'T':
 case 't':
 applyItem(titanic,reksai);
+break;
 case 'S':
 case 's':
 applyItem(stride,reksai);
+break;
 case 'Y':
 case 'y':
 applyItem(youmuus,reksai);
+break;
 }
+
+
+
 cout<<"Deine aktuellen Stats mit einem Item lauten:"<<endl<<endl;
 cout<<"AD = "<<reksai.ad<<endl;
 cout<<"AS = "<<reksai.attackSpeed<<endl;
 cout<<"BonusAD = "<<reksai.bonusad<<endl;
 cout<<"HP = "<<reksai.hp<<endl;
-cout<<"Leahality = "<<reksai.leathality<<endl<<endl;
+cout<<"Leahality = "<<reksai.lethality<<endl<<endl;
+
+
+
+cout<<"Entscheide nun die Werte des Dummies!"<<endl;
+cout<<"Wie viel HP soll der Dummy haben?  ";
+cin>>dummyhp;
+cout<<endl<<"Wie viel Armor und Magicresist soll der Dummy haben?  ";
+cin>>dummyres;
+cout<<"\n\nDer Dummy für diesen Simulationsdurchlauf hat "<<dummyhp<<" Lebenspunkte und "<<dummyres<<" Resistencen"<<endl;
+
+
+
+
+
+
+
+
+
 return 0;
 }
