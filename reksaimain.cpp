@@ -1,5 +1,6 @@
 #include <iostream>
 #include "item.h"
+#include <limits>
 
 using namespace std;
 int level = 0;
@@ -8,6 +9,7 @@ int basead = 62;
 int basehp = 600;
 float baseas = 0.667;
 
+int levelreinfolge;
 char itemauswahl;
 
 int adaptivef = 5;
@@ -22,7 +24,22 @@ float hpgrowth = 99;
 //dummy zeug
 int dummyhp;
 int dummyres;
+float schadensred = 1;
 
+int lvlfirst;
+int lvlsecond;
+int lvlthird;
+
+int lvlq;
+int lvlw;
+int lvle;
+int lvlr;
+
+//reksai abilities
+float reksaiq = 0;
+float reksaiw = 0;
+float reksaie = 0;
+float reksair = 0;
 
 enum Rune {
     CONQUEROR = 1,
@@ -39,16 +56,103 @@ while(true){
     cin>> level;
 
 if(cin.fail()){
-    cout<< "Bitte ein Level zwischen 1 und 18 angeben!\n";
+    cout<< "Bitte ein Level zwischen 3 und 18 angeben!\n";
     cin.clear();
-    cin.ignore(1000,'\n');
-}else if(level<1||level>18){
-    cout<< "Bitte ein Level zwischen 1 und 18 angeben!\n";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}else if(level<3||level>18){
+    cout<< "Bitte ein Level zwischen 3 und 18 angeben!\n";
 }else{
-    cout<< "Level acceptiert"<<endl;
+    cout<< "Level acceptiert"<<endl<<endl<<endl;
     break;
 }
 }
+cout<<"Wähle aus welche Abilities du wie upgraden möchtest:"<<endl<<"1. Q max\n2. three points into Q into E max\n3. E max\n\n";
+
+while(true){
+    cin>> levelreinfolge;
+
+if(cin.fail()){
+    cout<< "Bitte geben Sie die Zahl 1,2 oder 3 ein!";
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}else if(levelreinfolge<1 || levelreinfolge>3){
+    cout<< "Bitte geben Sie 1,2 oder 3 ein!";
+}else{
+    break;
+}
+}
+
+/*
+kp ich mach das neu war etwas lost wie ich das am besten schreiben soll
+if(level = 3)
+lvlthird = lvlsecond = lvlfirst = 1;
+if(level > 3 && level < 6)
+lvlfirst = level - 2;
+lvlsecond = lvlthird = 1;
+if(level = 7)
+lvlsecond = lvlthird = 1;
+lvlfirst = 4;
+if(level = 8)
+lvlthird = 1;
+lvlsecond = 2;
+lvlfirst = 4;
+if(level = 9)
+lvlthird = 1;
+lvlsecond = 2;
+lvlfirst = 5;
+
+*/
+// 3. lvl reinfolge in falle reksais ihre W
+
+if(level >= 3 && level < 14)
+lvlthird = 1;
+if(level == 14 || level == 15)
+lvlthird = level - 12;
+if(level == 17 || level == 18)
+lvlthird = level - 13;
+
+
+// second max
+
+if(level >= 3 && level < 8)
+lvlsecond = 1;
+if(level == 8 || level == 9)
+lvlsecond = 2;
+if(level == 10 || level == 11)
+lvlsecond = 3;
+if(level == 12 || level == 13)
+lvlsecond = level - 8;
+if(level >= 13)
+lvlsecond = 5;
+
+//first max
+
+if(level == 3)
+lvlfirst = 1;
+if(level > 3 && level < 6)
+lvlfirst = level - 2;
+if(level == 6)
+lvlfirst = 3;
+if(level == 7 || level == 8)
+lvlfirst = 4;
+if(level > 8 && level <= 18)
+lvlfirst =5;
+
+if(level >= 6 && level < 11)
+lvlr = 1;
+if(level >= 11 && level < 16)
+lvlr = 2;
+if(level >= 16)
+lvlr = 3;
+
+cout << lvlfirst<<" "<<lvlsecond<<" "<<lvlthird<<" "<<lvlr;
+ 
+return 0;
+
+
+
+
+
 
 
 cout<<"\nWelche runen soll reksai haben?"<<endl;
@@ -59,11 +163,12 @@ while(true){
 if(cin.fail()){
     cout<< "Bitte geben sie 1,2 oder 3 ein!";
     cin.clear();
-    cin.ignore(1000,'\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }else if(runes<1||runes>3){
     cout<< "Bitte geben sie 1,2 oder 3 ein!";
 }else{
     cout<< "Runen acceptiert"<<endl<<endl;
+  
     break;
 }
 }
@@ -117,18 +222,19 @@ cout<<"AD = "<<reksai.ad<<endl;
 cout<<"AS = "<<reksai.attackSpeed<<endl;
 cout<<"BonusAD = "<<reksai.bonusad<<endl;
 cout<<"HP = "<<reksai.hp<<endl;
-cout<<"Leahality = "<<reksai.lethality<<endl<<endl;
+cout<<"Lethality = "<<reksai.lethality<<endl<<endl;
 
 
 
 cout<<"Entscheide nun die Werte des Dummies!"<<endl;
-cout<<"Wie viel HP soll der Dummy haben?  ";
+cout<<"Wie viel HP soll der Dummy haben? ";
 cin>>dummyhp;
-cout<<endl<<"Wie viel Armor und Magicresist soll der Dummy haben?  ";
+cout<<endl<<"Wie viel Armor und Magicresist soll der Dummy haben? ";
 cin>>dummyres;
-cout<<"\n\nDer Dummy für diesen Simulationsdurchlauf hat "<<dummyhp<<" Lebenspunkte und "<<dummyres<<" Resistencen"<<endl;
+cout<<"\nDer Dummy für diesen Simulationsdurchlauf hat "<<dummyhp<<" Lebenspunkte und "<<dummyres<<" Resistencen"<<endl;
 
 
+schadensred = 100/(100 + dummyres);
 
 
 
