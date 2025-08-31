@@ -1,6 +1,7 @@
 #include <iostream>
 #include "item.h"
 #include <limits>
+#include <vector>
 
 using namespace std;
 int level = 0;
@@ -15,7 +16,7 @@ char itemauswahl;
 int adaptivef = 5;
 float asrunes = 0.01;
 
-
+float dmgpercent;
 
 float adgrowth = 3;
 float asgrowth = 0.02;
@@ -46,6 +47,24 @@ enum Rune {
     PTA = 2,
     ELECTROCUTE = 3
 };
+
+struct AbilityScaling {
+    vector<float> baseDamage; 
+    vector<float> adRatio;             
+    vector<float> bonusAdRatio;         
+};
+
+float calculateAbilityDamage(const AbilityScaling& ability, int rank, float totalAD, float bonusAD) {
+    if (rank <= 0) return 0.0f;
+    if (rank > ability.baseDamage.size()) rank = ability.baseDamage.size();
+
+   
+    float base = ability.baseDamage[rank - 1];
+    float adScale = ability.adRatio[rank - 1];
+    float bonusAdScale = ability.bonusAdRatio[rank - 1];
+
+    return base + adScale * totalAD + bonusAdScale * bonusAD;
+}
 
 int main(){
 
@@ -104,6 +123,8 @@ lvlfirst = 5;
 */
 // 3. lvl reinfolge in falle reksais ihre W
 
+if(levelreinfolge == 1 || levelreinfolge == 3){
+
 if(level >= 3 && level < 14)
 lvlthird = 1;
 if(level == 14 || level == 15)
@@ -145,13 +166,34 @@ lvlr = 2;
 if(level >= 16)
 lvlr = 3;
 
-cout << lvlfirst<<" "<<lvlsecond<<" "<<lvlthird<<" "<<lvlr;
- 
-return 0;
 
+}
+else {
 
+    if(level >= 3 && level < 14)
+lvlthird = 1;
+if(level == 14 || level == 15)
+lvlthird = level - 12;
+if(level == 17 || level == 18)
+lvlthird = level - 13;
 
+if(level >= 3 && level < 7)
+lvlfirst = 1;
+if(level >= 7 && level < 11)
+lvlfirst = level - 5;
+if(level>11)
+lvlfirst = 5;
 
+if(level == 3)
+lvlsecond = 1;
+if(level > 3 && level < 6)
+lvlsecond = level - 2;
+if(level == 12 || level == 13)
+lvlsecond = level - 8;
+if(level > 13)
+lvlsecond = 5;
+
+}
 
 
 
@@ -235,6 +277,81 @@ cout<<"\nDer Dummy für diesen Simulationsdurchlauf hat "<<dummyhp<<" Lebenspunk
 
 
 schadensred = 100/(100 + dummyres);
+
+
+
+
+AbilityScaling reksaiqout{
+    {0,0,0,0,0},
+    {0.3,0.35,0.4,0.45,0.5},
+    {0,0,0,0,0}
+};
+
+AbilityScaling reksaiqin{
+    {50,80,110,140,170},
+    {0,0,0,0,0},
+    {0.25,0.25,0.25,0.25,0.25}
+};
+AbilityScaling reksaiw{
+    {30,55,80,105,130},
+    {0,0,0,0,0},
+    {0,0,0,0,0}
+};
+AbilityScaling reksaie{
+    {100,135,170,205,240},
+    {0,0,0,0,0},
+    {0.8,0.8,0.8,0.8,0.8}
+};
+AbilityScaling reksair{
+    {150,250,350,350,350},
+    {0,0,0,0,0},
+    {1,1,1,1,1}
+};
+
+
+if(levelreinfolge < 3){
+
+lvlq = lvlfirst;
+lvlw = lvlthird;
+lvle = lvlsecond;}
+else{
+lvlq = lvlsecond;
+lvlw = lvlthird;
+lvle = lvlfirst;
+
+}
+
+//dmg percent der ult
+if(lvlr == 1) dmgpercent = 0.15;
+else if(lvlr == 2) dmgpercent = 0.2;
+else if(lvlr == 3) dmgpercent = 0.25;
+
+
+
+float qdamageout = calculateAbilityDamage(reksaiqout, lvlq, reksai.ad, reksai.bonusad) + reksai.ad;
+float qdamagein = calculateAbilityDamage(reksaiqin, lvlq, reksai.ad, reksai.bonusad);
+float wdamage = calculateAbilityDamage(reksaiw, lvlw, reksai.ad, reksai.bonusad);
+float edamage = calculateAbilityDamage(reksaie, lvle, reksai.ad, reksai.bonusad);
+float rdamage = calculateAbilityDamage(reksair, lvlr, reksai.ad, reksai.bonusad)+ dummyhp* dmgpercent ;
+
+cout<<endl<<endl <<"Aktuell macht deine unburrowd Q "<<qdamageout <<" schaden !";
+cout<<endl<<"Aktuell macht deine burrowd Q "<<qdamagein <<" schaden !";
+cout<<endl<<"Aktuell macht deine W "<<wdamage <<" magicdmg !";
+cout<<endl<<"Aktuell macht deine E "<<edamage <<" truedmg !";
+cout<<endl<<"Aktuell macht deine Ult "<<rdamage <<" dmg !";
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
