@@ -2,6 +2,8 @@
 #include "item.h"
 #include <limits>
 #include <vector>
+#include <algorithm> 
+#include <map> 
 
 using namespace std;
 int level = 0;
@@ -36,6 +38,7 @@ int lvlw;
 int lvle;
 int lvlr;
 
+int inventar = 0;
 //reksai abilities
 float reksaiq = 0;
 float reksaiw = 0;
@@ -65,6 +68,22 @@ float calculateAbilityDamage(const AbilityScaling& ability, int rank, float tota
 
     return base + adScale * totalAD + bonusAdScale * bonusAD;
 }
+
+
+map<string, Item> itemMap = {
+    {"titanic", titanic},
+    {"stride", stride},
+    {"youmuus", youmuus},
+    {"sojin", sojin},
+    {"bloodmail", bloodmail},
+    {"steraks", steraks},
+    {"dd", dd},
+    {"maw", maw},
+    {"cleaver", cleaver},
+    {"serpents", serpents},
+    {"mortal", mortal},
+    {"syreldas", syreldas}
+};
 
 int main(){
 
@@ -239,8 +258,55 @@ cout<<"BonusAD = "<<reksai.bonusad<<endl;
 cout<<"HP = "<<reksai.hp<<endl<<endl;
 
 //morgen weiter mit header für items 
-cout<<"Wähle nun as nächstes deine Items!"<<endl<<endl<<"Zur Auswahl steht Titanic (T), Stride (S) oder Youmuus(Y).";
-cin >>itemauswahl;
+
+cout<<"Wählen sie nun als nächstes Ihre Items. Zur Auswahl stehen:"<<endl<<"Titanic OR Stride\nYoumuus\nSojin\nBloodmail\nSteraks\ndd\nmaw\nCleaver\nSerpents\nMortal\nSyreldas\nIf you are done with adding items type X";
+
+
+
+
+vector<Item> build;
+string itemname;
+
+for (int i = 0; i < 6; i++) {
+    cout << "Item Nummer " << i+1 << " : ";
+    cin >> itemname;
+    transform(itemname.begin(), itemname.end(), itemname.begin(), ::tolower);
+
+    if (itemname == "x")
+        break;
+if(itemname == "stride"){
+if(find(build.begin(),build.end(),titanic) != build.end()){
+cout<<"Remeber that you can only have EITHER stride or titanic!";
+}
+}
+if(itemname == "titanic"){
+if(find(build.begin(),build.end(),stride) != build.end()){
+cout<<"Remeber that you can only have EITHER stride or titanic!";
+}
+}
+
+
+
+
+    if (itemMap.find(itemname) != itemMap.end()) {
+        Item chosen = itemMap[itemname];   // hier wird chosen angelegt
+
+    if (find(build.begin(), build.end(), chosen) != build.end()) {
+        cout << "Dieses Item hast du schon!\n";
+        i--;
+        } else {
+            build.push_back(chosen);
+            cout << "Item hinzugefügt: " << itemname << endl;
+        }
+    } else {
+        cout << "Ungültiges Item!\n";
+        i--;
+}
+}
+
+
+//cout<<"Wähle nun as nächstes deine Items!"<<endl<<endl<<"Zur Auswahl steht Titanic (T), Stride (S) oder Youmuus(Y).";
+//cin >>itemauswahl;
 
 switch(itemauswahl){
 case 'T':
